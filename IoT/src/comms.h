@@ -15,7 +15,7 @@ PubSubClient client(espClient);
 String topicBuffer;
 
 // MQTT Broker configuration (Default MQTT port is 1883)
-const char* mqttServer = "192.168.68.104";  
+const char* mqttServer = "192.168.1.116";  
 const int mqttPort = 1883;
 
 unsigned long lastUpdate = 0;
@@ -77,7 +77,7 @@ void sendPeriodicUpdate(String topic, String dataToSend)
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-    String message = "";
+    String message = "1";
     for (int i = 0; i < length; i++)
     {
         message += (char)payload[i];
