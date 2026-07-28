@@ -77,7 +77,7 @@ void sendPeriodicUpdate(String topic, String dataToSend)
 
 void callback(char *topic, byte *payload, unsigned int length)
 {
-    String message = "1";
+    String message = "";
     for (int i = 0; i < length; i++)
     {
         message += (char)payload[i];
