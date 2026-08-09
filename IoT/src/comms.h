@@ -97,6 +97,13 @@ void callback(char *topic, byte *payload, unsigned int length)
     performActionBasedOnPayload(message);
 }
 
+/*
+* MQTT Topics
+* EventLog/mqttClient | UPLOAD - Device Events (init, error, etc)
+* sensorData/mqttClient | UPLOAD - Telemetry Data
+* devicePayload/mqttClient | RECIEVES - Gives Data to ESP32 to act on
+*/
+
 void mqttConnect()
 {
     while (!client.connected())

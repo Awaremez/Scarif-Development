@@ -33,6 +33,8 @@ void setup()
     wifiSetup();
     mqttSetup();
 
+    randomSeed(analogRead(A0));
+
     while (!Serial)
     {
         delay(10);
@@ -51,8 +53,10 @@ void loop()
     {
         lastUpdate = now;
         // TODO: Insert customized sendDataToServer() calls here.
+        unsigned int randomNum = random(1, 10000);
+        sendDataToServer("sensorData/" + String(mqttClient), String(randomNum));
     }
-
+    
     // 3. Yield execution time for PubSubClient processing
     client.loop();
     delay(100);
