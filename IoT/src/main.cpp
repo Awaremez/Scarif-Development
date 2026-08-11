@@ -6,6 +6,10 @@ const char *mqttClient = "ESP32_Hayden"; // EDIT THIS FIELD
 const char *mqttTopic;
 
 #include "comms.h"
+#include <Wire.h>
+#include "Adafruit_ADT7410.h"
+
+Adafruit_ADT7410 tempsensor = Adafruit_ADT7410();
 
 void performActionBasedOnPayload(String payload)
 {
@@ -29,11 +33,17 @@ void setup()
 {
     pinMode(LED_BUILTIN, OUTPUT);
     Serial.begin(9600);
-    
+
     wifiSetup();
     mqttSetup();
 
     randomSeed(analogRead(A0));
+
+    if (!tempsensor.begin())
+    {
+        Serial.println("Couldn't find ADT7410!");
+        while (1);
+    }
 
     while (!Serial)
     {
@@ -48,15 +58,9 @@ void loop()
     mqttConnect();
 
     // 2. Transmit periodic telemetry (if required by design specification)
-    unsigned long now = millis();
-    if (now - lastUpdate > updateInterval)
-    {
-        lastUpdate = now;
-        // TODO: Insert customized sendDataToServer() calls here.
-        unsigned int randomNum = random(1, 10000);
-        sendDataToServer("sensorData/" + String(mqttClient), String(randomNum));
-    }
-    
+    float tempC  = tempsensor.readTempC();
+    sendPeriodicUpdate("sensorData", String(tempC + String("°C")));
+
     // 3. Yield execution time for PubSubClient processing
     client.loop();
     delay(100);
